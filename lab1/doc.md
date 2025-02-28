@@ -48,13 +48,13 @@ int main(int argc, char* argv[]) {  // Funkcja main z argumentami
 ```
 
 ## Jak uruchomić?
-1. Skompiluj program
+1. Skompiluj program:
 ```
-g++ program.cpp -o program
+g++ -o <nazwa> <nazwa pliku>.cpp
 ```
 
-2. Uruchom program z argumentami
+2. Uruchom program z argumentami:
 
 ```
-./program arg1 arg2 arg3
+./<nazwa> arg1 arg2 arg3
 ```

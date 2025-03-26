@@ -27,7 +27,7 @@ void loadFromFile(const std::string& filename, std::vector<Product>& products) {
 }
 
 void saveToFile(const std::string& filename, const std::vector<Product>& products) {
-ofstream output;
+    ofstream output;
     output.open(filename.c_str());
 
     if (!output.is_open()) {

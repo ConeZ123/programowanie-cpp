@@ -1,2 +1,1 @@
-vdolce 36 2000
-vdolce 2000 2000
+vdolce 36 1000

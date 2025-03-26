@@ -1,118 +1,157 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
+#include <fstream>
+#include <string>
 using namespace std;
 
 struct Product {
-    string name;
+    std::string name;
     unsigned int price;
     unsigned int qty;
 };
 
-void loadFromFile(const string& filename, vector<Product> items) {
+void loadFromFile(const std::string& filename, std::vector<Product>& products) {
     ifstream input;
-    input.open(filename);
+    input.open(filename.c_str());
 
-    if(!input) {
-        cerr << "Nie można otworzyć pliku: " << filename;
+    if (!input.is_open()) {
+        cerr << "Nie mozna otworzyc pliku: " << filename;
+        return;
     }
 
     Product p;
     while (input >> p.name >> p.price >> p.qty) {
-        items.push_back(p);
+        products.push_back(p);
     }
     input.close();
 }
 
-void saveToFile(const string& filename, vector<Product> items) {
-    ofstream input;
-    input.open(filename);
+void saveToFile(const std::string& filename, const std::vector<Product>& products) {
+ofstream output;
+    output.open(filename.c_str());
 
-    if(!input) {
-        cerr << "Bład zapisu do pliku: " << filename;
+    if (!output.is_open()) {
+        cerr << "Blad zapisu do pliku: " << filename;
+        return;
     }
 
-    for (size_t i = 0; i < items.size(); i++) {
-        cout << items[i].name << "\t" << items[i].price << "\t" << items[i].qty << "\n";
+    for (size_t i = 0; i < products.size(); i++) {
+        output << products[i].name << " " << products[i].price << " " << products[i].qty << "\n";
     }
-    input.close();
+    output.close();
 }
 
-void displayProduct(const vector<Product>& items) {
-    cout << "Magazyn: ";
-    cout << "Nazwa: \t" << "Cena: \t" << "Ilosc: \t";
-    for (size_t i = 0; i < items.size(); i++) {
-        cout << items[i].name << "\t" << items[i].price << "\t" << items[i].qty << "\n";
+void displayProducts(const std::vector<Product>& products) {
+    cout << "Magazyn:\n";
+    cout << "Nazwa\tCena\tIlosc\n";
+    for (size_t i = 0; i < products.size(); i++) {
+        cout << products[i].name << "\t" << products[i].price << "\t" << products[i].qty << "\n";
     }
 }
 
-void addProduct(vector<Product>& items) {
+void addProduct(std::vector<Product>& products) {
     Product p;
-    cout << "Podaj nazwę produktu: ";
+    cout << "Podaj nazwe produktu: ";
     cin >> p.name;
-    cout << "Podaj cenę produktu: ";
+    cout << "Podaj cene produktu: ";
     cin >> p.price;
-    cout << "Podaj ilość produktu: ";
+    cout << "Podaj ilosc produktu: ";
     cin >> p.qty;
 
-    if (p.price < 0 || p.qty < 0) {
-        cout << "Cena i ilość produktu nie może być ujemna";
+    if (p.price == 0 || p.qty == 0) {
+        std::cerr << "Cena i ilosc musza byc wieksze od 0!\n";
+        return;
     }
-    items.push_back(p);
+
+    products.push_back(p);
 }
 
-void removeProduct(vector<Product>& items) {
+void removeProduct(std::vector<Product>& products) {
     string name;
-    cout << "Podaj nazwę produktu: ";
+    cout << "Podaj nazwe produktu do usuniecia: ";
     cin >> name;
 
-    for (size_t i = 0; i < items.size(); i++) {
-        if (items[i].name == name) {
-            items.erase(items.begin() + i);
-            cout << "Produkt pomyślnie usunięty.\n";
+    bool found = false;
+    for (size_t i = 0; i < products.size(); i++) {
+        if (products[i].name == name) {
+            products.erase(products.begin() + i);
+            cout << "Produkt usuniety.\n";
+            found = true;
+            break;
         }
-        cerr << "Nie znaleziono produktu.\n";
-    } 
+    }
 
-}
-
-void changeQuantity(vector<Product>& items) {
-    string name;
-    cout << "Podaj nazwę produktu: ";
-    cin >> name;
-
-    unsigned int newQty;
-    cout << "Podaj ilość produktu: ";
-    cin >> newQty;
-
-    for (size_t i = 0; i < items.size(); i++) {
-        if (items[i].name == name) {
-            items[i].qty == newQty;
-            cout << "Ilość prodktu została zmieniona.\n";
-        }
-        cerr << "Nie znaleziono produktu.\n";
+    if (!found) {
+        cerr << "Nie znaleziono produktu!\n";
     }
 }
 
-void searchProduct(vector<Product>& items) {
+void changeProductQty(std::vector<Product>& products) {
     string name;
-    cout << "Podaj nazwę produktu: ";
+    unsigned int new_qty;
+    cout << "Podaj nazwe produktu: ";
     cin >> name;
+    cout << "Podaj nowa ilosc: ";
+    cin >> new_qty;
 
-    for (size_t i = 0; i < items.size(); i++) {
-        if (items[i].name == name) {
-            cout << "Znaleziono produkt: " << items[i].name << "Cena: " << items[i].price << "Ilość: " << items[i].qty << "\n";
+    bool found = false;
+    for (size_t i = 0; i < products.size(); i++) {
+        if (products[i].name == name) {
+            products[i].qty = new_qty;
+            cout << "Zmieniono ilosc produktu.\n";
+            found = true;
+            break;
         }
-        cerr << "Nie znaleziono produktu.\n";
+    }
+
+    if (!found) {
+        cerr << "Produkt nie znaleziony!\n";
     }
 }
 
-void optimizedWarehouse(vector<Product>& items) {
-    // ....     
+void searchProduct(const std::vector<Product>& products) {
+    string name;
+    cout << "Podaj nazwe produktu: ";
+    cin >> name;
+
+    bool found = false;
+    for (size_t i = 0; i < products.size(); i++) {
+        if (products[i].name == name) {
+            cout << "Znaleziono: " << products[i].name << " Cena: " << products[i].price << " Ilosc: " << products[i].qty << "\n";
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cerr << "Produkt nie znaleziony!\n";
+    }
+}
+
+void optimizeWarehouse(std::vector<Product>& products) {
+    vector<Product> optimized;
+
+    for (size_t i = 0; i < products.size(); i++) {
+        bool found = false;
+        for (size_t j = 0; j < optimized.size(); j++) {
+            if (optimized[j].name == products[i].name && optimized[j].price == products[i].price) {
+                optimized[j].qty += products[i].qty;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            optimized.push_back(products[i]);
+        }
+    }
+
+    products = optimized;
+    cout << "Magazyn zoptymalizowany!\n";
 }
 
 int main(int argc, char* argv[]) {
-    string filename = (argc > 1) ? argv[1] : 'magazyn.txt';
+    string filename = (argc > 1) ? argv[1] : "magazyn.txt";
     vector<Product> products;
 
     loadFromFile(filename, products);
@@ -131,22 +170,29 @@ int main(int argc, char* argv[]) {
 
         switch (choice) {
             case 1:
-                displayProduct(products);
+                displayProducts(products);
+                break;
             case 2:
                 addProduct(products);
+                break;
             case 3:
                 removeProduct(products);
+                break;
             case 4:
-                changeQuantity(products);
+                changeProductQty(products);
+                break;
             case 5:
                 searchProduct(products);
+                break;
             case 6:
-                optimizedWarehouse(products);
+                optimizeWarehouse(products);
+                break;
             case 7:
                 saveToFile(filename, products);
-                cout << "Pomyślnie zapisano dane do pliku.";
+                std::cout << "Zapisano dane. Koniec programu.\n";
+                return 0;
             default:
-                cerr << "Niepoprawny wybór!";
+                std::cerr << "Niepoprawny wybor!\n";
         }
     }
 

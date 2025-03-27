@@ -5,14 +5,14 @@
 using namespace std;
 
 struct Product {
-    std::string name;
+    string name;
     unsigned int price;
     unsigned int qty;
 };
 
 void loadFromFile(const std::string& filename, std::vector<Product>& products) {
     ifstream input;
-    input.open(filename.c_str());
+    input.open(filename);
 
     if (!input.is_open()) {
         cerr << "Nie mozna otworzyc pliku: " << filename;
@@ -27,8 +27,8 @@ void loadFromFile(const std::string& filename, std::vector<Product>& products) {
 }
 
 void saveToFile(const std::string& filename, const std::vector<Product>& products) {
-ofstream output;
-    output.open(filename.c_str());
+    ofstream output;
+    output.open(filename);
 
     if (!output.is_open()) {
         cerr << "Blad zapisu do pliku: " << filename;

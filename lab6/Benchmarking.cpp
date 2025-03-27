@@ -41,4 +41,37 @@ int main() {
         }
     }
 
+    // Cache friendliness
+
+    {
+        TimeMeasurement t("Sumowanie elementów vector");
+        std::vector<int> vec;
+        vec.reserve(N);
+
+        for (int i =0; i < N; i++) {
+            vec.push_back(i);
+        }
+
+        long long sum = 0;
+        for (int val : vec) {
+            sum += val;
+        }
+        std::cout << "Suma vector: " << sum << std::endl;
+    }
+
+    {
+        TimeMeasurement t("Sumowanie elementów list");
+        std::list<int> lst;
+        for (int i = 0; i < N; i++) {
+            lst.push_back(i);
+        }
+
+        long long sum = 0;
+        for (int val : lst) {
+            sum +=val;
+        }
+        std::cout << "Suma list: " << sum << std::endl;
+    }
+
+    return 0;
 }

@@ -5,15 +5,16 @@
 #include "json.hpp"
 
 using json = nlohmann::json;
+using namespace std;
 
 struct Student {
     int id;
-    std::string firstName;
-    std::string lastName;
+    string firstName;
+    string lastName;
     double score;
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Student, id, firstName, lastName, score);
 
-    std::string getGrade() const {
+    string getGrade() const {
         if (score >= 90) {
             return "5";
         } else if (score >= 80) {
@@ -30,23 +31,23 @@ struct Student {
     }
 };
 
-void loadStudents(std::vector<Student>& students, const std::string& filename) {
-    std::ifstream i(filename);
+void loadStudents(vector<Student>& students, const string& filename) {
+    ifstream i(filename);
 
     if (!i) {
-        std::cerr << "Nie mozna otworzyc pliku: " << filename;
+        cerr << "Nie mozna otworzyc pliku: " << filename;
         return;
     }
 
     json data = json::parse(i);
-    students = data.get<std::vector<Student>>();
+    students = data.get<vector<Student>>();
 }
 
-void saveStudents(std::vector<Student>& students, const std::string& filename) {
-    std::ofstream i(filename);
+void saveStudents(vector<Student>& students, const string& filename) {
+    ofstream i(filename);
 
     if (!i) {
-        std::cerr << "Nie mozna zapisac do pliku: " << filename;
+        cerr << "Nie mozna zapisac do pliku: " << filename;
         return;
     }
 
@@ -54,76 +55,76 @@ void saveStudents(std::vector<Student>& students, const std::string& filename) {
     i << j.dump(4);
 }
 
-void printStudents(const std::vector<Student>& students) {
+void printStudents(const vector<Student>& students) {
     for (const auto& student : students) {
-        std::cout << student.id << " | " 
+        cout << student.id << " | " 
                   << student.firstName << " " << student.lastName << " | "
-                  << student.score << "% | " << student.getGrade() << std::endl;
+                  << student.score << "% | " << student.getGrade() << endl;
     }
 }
 
-double calculateAverageStudentScore(const std::vector<Student>& students) {
-    double sum = std::accumulate(students.begin(), students.end(), 0.0, [](double total, const Student& student) {
+double calculateAverageStudentScore(const vector<Student>& students) {
+    double sum = accumulate(students.begin(), students.end(), 0.0, [](double total, const Student& student) {
         return total + student.score;
     });
     return sum / students.size();
 }
 
-void findStudentById(const std::vector<Student>& students, int id) {
-    auto it = std::find_if(students.begin(), students.end(), [id](const Student& student) {
+void findStudentById(const vector<Student>& students, int id) {
+    auto it = find_if(students.begin(), students.end(), [id](const Student& student) {
         return student.id == id;
     });
 
     if (it != students.end()) {
         const Student& student = *it;
-        std::cout << student.id << " | "
+        cout << student.id << " | "
                   << student.firstName << " " << student.lastName << " | "
-                  << student.score << "% | " << student.getGrade() << std::endl;
+                  << student.score << "% | " << student.getGrade() << endl;
     } else {
-        std::cout << "Student with ID " << id << " not found!" << std::endl;
+        cout << "Student with ID " << id << " not found!" << endl;
     }
 }
 
-void countPassFail(const std::vector<Student>& students) {
-    int passed = std::count_if(students.begin(), students.end(),[](const Student& student) {
+void countPassFail(const vector<Student>& students) {
+    int passed = count_if(students.begin(), students.end(),[](const Student& student) {
         return student.score >= 50;
     });
 
     int failed = students.size() - passed;
 
-    std::cout << "Passed: " << passed << ", Failed: " << failed << std::endl;
+    cout << "Passed: " << passed << ", Failed: " << failed << endl;
 }
 
-void removeFailingStudents(std::vector<Student>& students) {
-    students.erase(std::remove_if(students.begin(), students.end(), [](const Student& student) {
+void removeFailingStudents(vector<Student>& students) {
+    students.erase(remove_if(students.begin(), students.end(), [](const Student& student) {
         return student.score < 50;
     }),
     students.end());
 }
 
 int main() {
-    std::vector<Student> students;
+    vector<Student> students;
 
     loadStudents(students, "students.json");
 
-    std::cout << "## Lista studentów ##" << std::endl;
+    cout << "## Lista studentów ##" << endl;
     printStudents(students);
 
-    std::cout << "## Średni wynik ##" << std::endl;
-    std::cout << "Średnia: " << calculateAverageStudentScore(students);
+    cout << "## Średni wynik ##" << endl;
+    cout << "Średnia: " << calculateAverageStudentScore(students);
 
-    std::cout << "## Zaliczenia ##" << std::endl;
+    cout << "## Zaliczenia ##" << endl;
     countPassFail(students);
 
     removeFailingStudents(students);
 
-    std::cout << "## Po usunięciu niezdanych ##" << std::endl;
+    cout << "## Po usunięciu niezdanych ##" << endl;
     printStudents(students);
 
     int studentId;
     while (true) {
-        std:: cout << "\nPodaj ID studenta: ";
-        std::cin >> studentId;
+        cout << "\nPodaj ID studenta: ";
+        cin >> studentId;
 
         if (studentId == 0) {
             break;

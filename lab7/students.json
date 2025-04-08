@@ -1,0 +1,44 @@
+[
+    {
+        "firstName": "Jan",
+        "id": 12345,
+        "lastName": "Kowalski",
+        "score": 72.5
+    },
+    {
+        "firstName": "Anna",
+        "id": 23456,
+        "lastName": "Nowak",
+        "score": 88.0
+    },
+    {
+        "firstName": "Katarzyna",
+        "id": 45678,
+        "lastName": "Zielińska",
+        "score": 50
+    },
+    {
+        "firstName": "Marek",
+        "id": 56789,
+        "lastName": "Dąbrowski",
+        "score": 41
+    },
+    {
+        "firstName": "Travis",
+        "id": 53149,
+        "lastName": "Scott",
+        "score": 10
+    },
+    {
+        "firstName": "Bam",
+        "id": 26139,
+        "lastName": "Adebayo",
+        "score": 100
+    },
+    {
+        "firstName": "Slim",
+        "id": 41428,
+        "lastName": "Szejdi",
+        "score": 31
+    }
+]

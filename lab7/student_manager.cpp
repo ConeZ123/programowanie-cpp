@@ -2,7 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
-#include <json.hpp>
+#include "json.hpp"
 
 using json = nlohmann::json;
 
@@ -14,13 +14,20 @@ struct Student {
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Student, id, firstName, lastName, score);
 
     std::string getGrade() const {
-        if (score >= 90) return "5";
-        if (score >= 80) return "4+";
-        if (score >= 70) return "4";
-        if (score >= 60) return "3+";
-        if (score >= 50) return "3";
-        if (score < 50) return "2";
-    };
+        if (score >= 90) {
+            return "5";
+        } else if (score >= 80) {
+            return "4+";
+        } else if (score >= 70) {
+            return "4";
+        } else if (score >= 60) {
+            return "3+";
+        } else if (score >= 50) {
+            return "3";
+        } else {
+            return "2";
+        }
+    }
 };
 
 void loadStudents(std::vector<Student>& students, const std::string& filename) {
@@ -32,7 +39,7 @@ void loadStudents(std::vector<Student>& students, const std::string& filename) {
     }
 
     json data = json::parse(i);
-
+    students = data.get<std::vector<Student>>();
 }
 
 void saveStudents(std::vector<Student>& students, const std::string& filename) {
@@ -99,20 +106,31 @@ int main() {
 
     loadStudents(students, "students.json");
 
+    std::cout << "## Lista studentów ##" << std::endl;
     printStudents(students);
 
-    std::cout << "Average score: " << calculateAverageStudentScore(students) << "%" << std::endl;
+    std::cout << "## Średni wynik ##" << std::endl;
+    std::cout << "Średnia: " << calculateAverageStudentScore(students);
 
+    std::cout << "## Zaliczenia ##" << std::endl;
     countPassFail(students);
 
     removeFailingStudents(students);
-    std::cout << "After removing failing students:" << std::endl;
+
+    std::cout << "## Po usunięciu niezdanych ##" << std::endl;
     printStudents(students);
 
-    
-    int searchId = 12345;  
-    std::cout << "Searching for student with ID " << searchId << ":" << std::endl;
-    findStudentById(students, searchId);
+    int studentId;
+    while (true) {
+        std:: cout << "\nPodaj ID studenta: ";
+        std::cin >> studentId;
+
+        if (studentId == 0) {
+            break;
+        }
+
+        findStudentById(students, studentId);
+    }
 
     saveStudents(students, "students.json");
 

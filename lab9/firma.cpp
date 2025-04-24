@@ -31,6 +31,26 @@ bool isDigit(const string& str) {
     return false;
 }
 
+bool containsAt(const string& str) {
+    for (char c : str) {
+        if (c == '@') {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isValidNIPChecksum(const string& nip) {
+    int weights[9] = {6, 5, 7, 2, 3, 4, 5, 6, 7};
+    int sum = 0;
+
+    for (int i = 0; i < 9; i++) {
+        sum += (nip[i] - '0') * weights[i];
+    }
+    int control = sum % 11;
+    return control == (nip[9] - '0');
+}
+
 class Firma {
     public:
     string name;
@@ -42,7 +62,7 @@ class Firma {
     Firma(const string &_name, const string &_nip, const string &_date, const string &_mail) {
 
 
-        // NIP
+        // NIP check
         if (_name.length() < 3 || _name.length() > 100) {
             throw length_error("Błąd");
         }
@@ -55,7 +75,11 @@ class Firma {
             throw invalid_argument("Numer NIP musi zawierać tylko liczby");
         }
 
-        // DATA
+        if (!isValidNIPChecksum(_nip)) {
+            throw domain_error("Niepoprawna cyfra kontrolna numeru NIP");
+        }
+
+        // DATA check
 
         if (_date.length() != 10) {
             throw length_error("Nieprawidłowa długość daty");
@@ -65,9 +89,51 @@ class Firma {
             throw invalid_argument("Nieprawidłowy format daty");
         }
 
+        auto [year, month, day] = parseDate(_date);
+        auto [currentYear, currentMonth, currentDay] = getCurrentDate();
+
+        if (year < 2000 || year > currentYear) {
+            throw domain_error("Rok rejestracji musi być w przedziale [2000, BIEŻĄCY ROK]");
+        }
+
+        if (month < 1 || month > 12 || (year == currentYear && month > currentMonth)) {
+            throw domain_error("Nieprawidłowy miesiąc rejestracji");            
+        }
+
+        const int daysInMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int maxDay = daysInMonths[month - 1];
+        if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)) {
+            maxDay = 29;
+        }
+
+        if (year == currentYear && month == currentMonth) {
+            maxDay = currentDay;
+        }
+
+        if (day < 1 || day > maxDay) {
+            throw domain_error("Nieprawidłowy dzień rejestracji");
+        }
+
+        // mail check
+
+        if (!containsAt(_mail)) {
+            throw invalid_argument("Adres email musi zawierać '@'");
+        }
+
         name = _name;
         nip = _nip;
         date = _date;
         mail = _mail;
     }
 };
+
+int main() {
+    try {
+        Firma f("XYZ", "1234563218", "2024-04-24", "xyz@xyz.pl");
+        cout << "Firma została poprawnie utworzona \n";
+    } catch (const exception& e) {
+        cerr << "Błąd: " << e.what() << "\n";
+    }
+
+    return 0;
+}

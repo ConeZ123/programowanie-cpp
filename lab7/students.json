@@ -15,30 +15,12 @@
         "firstName": "Katarzyna",
         "id": 45678,
         "lastName": "Zielińska",
-        "score": 50
-    },
-    {
-        "firstName": "Marek",
-        "id": 56789,
-        "lastName": "Dąbrowski",
-        "score": 41
-    },
-    {
-        "firstName": "Travis",
-        "id": 53149,
-        "lastName": "Scott",
-        "score": 10
+        "score": 50.0
     },
     {
         "firstName": "Bam",
         "id": 26139,
         "lastName": "Adebayo",
-        "score": 100
-    },
-    {
-        "firstName": "Slim",
-        "id": 41428,
-        "lastName": "Szejdi",
-        "score": 31
+        "score": 100.0
     }
 ]

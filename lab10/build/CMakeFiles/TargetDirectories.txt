@@ -1,0 +1,3 @@
+/home/conez/programowanie-cpp/lab10/build/CMakeFiles/ulamek.dir
+/home/conez/programowanie-cpp/lab10/build/CMakeFiles/edit_cache.dir
+/home/conez/programowanie-cpp/lab10/build/CMakeFiles/rebuild_cache.dir

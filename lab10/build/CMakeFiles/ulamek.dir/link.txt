@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wextra -Werror -pedantic CMakeFiles/ulamek.dir/fraction.cpp.o -o ulamek  -lm 
